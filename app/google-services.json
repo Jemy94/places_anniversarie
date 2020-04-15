@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "388675689392",
+    "firebase_url": "https://places-anniversarie-b3f6b.firebaseio.com",
+    "project_id": "places-anniversarie-b3f6b",
+    "storage_bucket": "places-anniversarie-b3f6b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388675689392:android:7a4940e012bc7fd7dcd475",
+        "android_client_info": {
+          "package_name": "com.jemy.placesanniversarie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388675689392-hemaksgvd3r0duud2ju1lnc6tiu4uen8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1XmifYN4vEZL0ZU5R66elG0EouAvZGNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388675689392-hemaksgvd3r0duud2ju1lnc6tiu4uen8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
