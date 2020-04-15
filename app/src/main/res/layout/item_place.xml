@@ -8,6 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
+    android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"
     app:cardCornerRadius="6dp"
     app:cardElevation="16dp">
 
@@ -49,10 +50,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
-            android:gravity="start"
+            android:gravity="center"
             android:maxLines="2"
             android:textColor="#000"
-            android:textSize="14sp"
+            android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideLine"
@@ -60,7 +61,7 @@
             tools:text="Paris" />
 
         <ImageButton
-            android:id="@+id/locationMarker"
+            android:id="@+id/deleteMarker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -69,7 +70,7 @@
             android:clickable="true"
             android:contentDescription="@null"
             android:focusable="true"
-            android:src="@drawable/ic_location"
+            android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideLine"

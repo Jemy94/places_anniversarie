@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
 import com.jemy.placesanniversarie.R;
+import com.jemy.placesanniversarie.model.Place;
 import com.jemy.placesanniversarie.ui.addplace.AddPlaceActivity;
 import com.jemy.placesanniversarie.utils.Constants;
 
@@ -22,13 +23,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap map;
     private MapView mapView;
     private MaterialButton doneButton;
-    private Double latitude , longitude;
+    private Double latitude = 0.0, longitude = 0.0;
+    private String name, placeId, imageUrl;
+    private Place place;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         instantiateViews();
+        getDataFromIntent();
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         setupDoneButtonClickListener();
@@ -45,14 +49,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.getUiSettings().setZoomControlsEnabled(true);
+        if (place != null && latitude != 0.0 && longitude != 0.0) {
+            LatLng latLng = new LatLng(latitude, longitude);
+            MarkerOptions markerOptions = new MarkerOptions().position(latLng);
+            map.clear();
+            map.addMarker(markerOptions);
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7f));
+        }
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-
                 MarkerOptions markerOptions = new MarkerOptions().position(latLng);
                 map.clear();
                 latitude = latLng.latitude;
-                longitude=latLng.longitude;
+                longitude = latLng.longitude;
                 map.addMarker(markerOptions);
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7f));
             }
@@ -83,18 +93,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onLowMemory();
     }
 
-    private void setupDoneButtonClickListener(){
+    private void setupDoneButtonClickListener() {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapActivity.this, AddPlaceActivity.class);
-                intent.putExtra(Constants.FROM_WHERE,Constants.FROM_MAP);
-                intent.putExtra(Constants.LATITUDE,latitude);
-                intent.putExtra(Constants.LONGITUDE,longitude);
+                Place place = new Place(placeId, name, latitude, longitude, imageUrl);
+                intent.putExtra(Constants.PLACE, place);
                 finish();
                 startActivity(intent);
-
             }
         });
+    }
+
+    private void getDataFromIntent() {
+        Intent intent = getIntent();
+        place = (Place) intent.getSerializableExtra(Constants.PLACE);
+        if (place != null) {
+            latitude = place.getLatitude();
+            longitude = place.getLongitude();
+            name = place.getPlaceName();
+            imageUrl = place.getImageUrl();
+            placeId = place.getId();
+        }
     }
 }

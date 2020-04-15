@@ -1,11 +1,5 @@
 package com.jemy.placesanniversarie.ui.addplace;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,6 +12,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,7 +26,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
@@ -52,7 +50,7 @@ public class AddPlaceActivity extends AppCompatActivity {
     private StorageTask uploadTask;
     private Double latitude = 0.0, longitude = 0.0;
     private String name, placeId, imageUrl;
-    private ViewModel sharedViewModel;
+    private Place place;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +127,29 @@ public class AddPlaceActivity extends AppCompatActivity {
         }
     }
 
+    private void updatePlace() {
+        name = placeNameEditText.getText().toString().trim();
+        if (TextUtils.isEmpty(name) || latitude == 0.0 || longitude == 0.0 || imageUrl == null) {
+            Toast.makeText(AddPlaceActivity.this, "Please enter the missing data", Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            Place place = new Place(placeId, name, latitude, longitude, imageUrl);
+            dbReference.child(placeId).setValue(place).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(AddPlaceActivity.this, "Place updated successfully", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(AddPlaceActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
     private void setupSaveButtonClickListener() {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +157,11 @@ public class AddPlaceActivity extends AppCompatActivity {
                 if (uploadTask != null && uploadTask.isInProgress()) {
                     Toast.makeText(AddPlaceActivity.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
-                    savePlace();
+                    if (placeId != null) {
+                        updatePlace();
+                    } else {
+                        savePlace();
+                    }
                 }
             }
         });
@@ -159,8 +184,9 @@ public class AddPlaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddPlaceActivity.this, MapActivity.class);
-                intent.putExtra(Constants.LATITUDE, latitude);
-                intent.putExtra(Constants.LONGITUDE, longitude);
+                name = placeNameEditText.getText().toString().trim();
+                Place place = new Place(placeId, name, latitude, longitude, imageUrl);
+                intent.putExtra(Constants.PLACE, place);
                 finish();
                 startActivity(intent);
             }
@@ -175,11 +201,22 @@ public class AddPlaceActivity extends AppCompatActivity {
 
     private void getDataFromIntent() {
         Intent intent = getIntent();
-        String fromWhere = intent.getStringExtra(Constants.FROM_WHERE);
-        latitude = intent.getDoubleExtra(Constants.LATITUDE, 0.0);
-        longitude = intent.getDoubleExtra(Constants.LONGITUDE, 0.0);
-        latitudeTextView.setText(latitude.toString());
-        longitudeTextView.setText(longitude.toString());
+        place = (Place) intent.getSerializableExtra(Constants.PLACE);
+        if (place != null) {
+            name = place.getPlaceName();
+            placeId = place.getId();
+            if (placeId != null) {
+                setTitle("Edit Pace");
+                saveButton.setText(R.string.update);
+            }
+            latitude = place.getLatitude();
+            longitude = place.getLongitude();
+            imageUrl = place.getImageUrl();
+            placeNameEditText.setText(name);
+            Glide.with(this).load(imageUrl).into(placeImage);
+            latitudeTextView.setText(latitude.toString());
+            longitudeTextView.setText(longitude.toString());
+        }
     }
 
     @Override

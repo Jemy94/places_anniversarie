@@ -6,7 +6,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
 
-@IgnoreExtraProperties
+
 public class Place  implements Serializable {
 
     private String id;

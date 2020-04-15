@@ -7,9 +7,9 @@
     tools:context=".ui.map.MapActivity">
 
     <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/mapView"/>
+        android:layout_height="match_parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/doneButton"
@@ -21,8 +21,8 @@
         android:focusable="true"
         android:text="@string/done"
         android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

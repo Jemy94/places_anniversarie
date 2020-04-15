@@ -10,12 +10,11 @@
         android:id="@+id/addPlaceProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
         android:visibility="gone"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/placeNameInput"
@@ -89,8 +88,8 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:contentDescription="@null"
-        android:focusable="true"
         android:drawableTop="@drawable/ic_location"
+        android:focusable="true"
         android:text="@string/pick_from_map"
         app:layout_constraintBottom_toBottomOf="@id/longitude"
         app:layout_constraintEnd_toEndOf="parent"

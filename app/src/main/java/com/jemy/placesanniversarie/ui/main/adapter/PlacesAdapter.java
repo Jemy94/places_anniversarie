@@ -19,11 +19,11 @@ import java.util.List;
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlaceViewHolder> {
     private Context context;
     private List<Place> places;
-    private OnItemClickListener listener;
+    private OnItemClickListener mListener;
 
     public PlacesAdapter(Context context, List<Place> places) {
-        context = context;
-        places = places;
+        this.context = context;
+        this.places = places;
     }
 
     @Override
@@ -51,25 +51,36 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlaceViewH
     public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView placeName;
-        //private ImageButton locationIcon;
+        private ImageButton deleteIcon;
         private ImageView placeImage;
 
         private PlaceViewHolder(View itemView) {
             super(itemView);
 
             placeName = itemView.findViewById(R.id.placeName);
-            //locationIcon = itemView.findViewById(R.id.locationMarker);
+            deleteIcon = itemView.findViewById(R.id.deleteMarker);
             placeImage = itemView.findViewById(R.id.placeImage);
 
             itemView.setOnClickListener(this);
+            deleteIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onDeleteClick(places.get(position));
+                        }
+                    }
+                }
+            });
         }
 
         @Override
         public void onClick(View v) {
-            if (listener != null) {
+            if (mListener != null) {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(places.get(position));
+                    mListener.onItemClick(places.get(position));
                 }
             }
         }
@@ -77,10 +88,11 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlaceViewH
 
     public interface OnItemClickListener {
         void onItemClick(Place place);
+
         void onDeleteClick(Place place);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-        listener = listener;
+        mListener = listener;
     }
 }
